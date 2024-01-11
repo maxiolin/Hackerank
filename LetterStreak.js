@@ -3,39 +3,40 @@
 // e.g hellothere -> lother
 
 const uniqueLetterStreak = (string) => {
-  let window = [],
+  let window = {},
     windowStart = 0,
     windowEnd = 0,
     subStringRecord = {};
 
   while (windowEnd < string.length) {
     const char = string[windowEnd];
-    if (!window.includes(char)) {
-      window.push(char);
+    if (!window[char]) {
+      window[char] = windowEnd;
       windowEnd++;
     } else {
+      const windowLength = windowEnd - windowStart
       subStringRecord =
-        subStringRecord.length > window.length
+        subStringRecord.length > windowLength
           ? subStringRecord
           : {
               subString: string.slice(windowStart, windowEnd),
-              length: window.length,
+              length: windowLength,
               start: windowStart,
               end: windowEnd - 1,
             };
 
-      windowStart = windowEnd - (window.length - window.indexOf(char) - 1);
+      windowStart = window[char] + 1;
       windowEnd = windowStart;
       i = windowStart;
-      window = []; // close the window
+      window = {}; // close the window
     }
   }
 
-  subStringRecord.length > window.length
+  subStringRecord.length > windowEnd - windowStart
     ? subStringRecord
     : {
         subString: string.slice(windowStart, windowEnd),
-        length: window.length,
+        length: windowEnd - windowStart,
         start: windowStart,
         end: windowEnd - 1,
       };
